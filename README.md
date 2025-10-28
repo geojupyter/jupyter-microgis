@@ -5,7 +5,7 @@
 A Jupyter Server extension which runs TiTiler.
 
 This extension is composed of a Python package named `jupyter_server_titiler`
-for the server extension and a NPM package named `jupyter-server-titiler`
+for the server extension and an NPM package named `jupyter-server-titiler`
 for the frontend extension.
 
 ## Requirements
