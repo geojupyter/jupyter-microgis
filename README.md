@@ -6,7 +6,7 @@
 > This repository is experimental and in the prototype stage.
 > Expect nothing to work.
 
-A Jupyter extension which provides a barebones read-only GIS experience from Xarray and 
+A Jupyter extension which provides a barebones read-only GIS experience from Xarray and
 GeoPandas objects in a widget.
 
 Inspired by [jupytergis-tiler](https://github.com/geojupyter/jupytergis-tiler) by
@@ -14,27 +14,26 @@ Inspired by [jupytergis-tiler](https://github.com/geojupyter/jupytergis-tiler) b
 
 Goals:
 
-* Serve users' simplest reasons for leaving JupyterLab for QGIS to make a cloud-only
+- Serve users' simplest reasons for leaving JupyterLab for QGIS to make a cloud-only
   workflow more comfortable
-* Simple API with usable defaults (`explore(ds, ds, gdf, { data: gdf, symbology: "choropleth"}`)
-* Re-arrange, show/hide, change transparency of layers
+- Simple API with usable defaults (`explore(ds, ds, gdf, { data: gdf, symbology: "choropleth"}`)
+- Re-arrange, show/hide, change transparency of layers
 
 Stretch goals:
 
-* Data discovery interface to find and visualize public datasets alongside your
+- Data discovery interface to find and visualize public datasets alongside your
   Python data objects
-* Simple symbology editing
+- Simple symbology editing
 
 Non-goals:
 
-* Exporting maps
-* Data analysis (use a Notebook!)
-* Advanced Symbology
+- Exporting maps
+- Data analysis (use a Notebook!)
+- Advanced Symbology
 
 This extension is composed of a Python package named `jupyter_server_titiler`
 for the server extension and an NPM package named `jupyter-server-titiler`
 for the frontend extension.
-
 
 ## Requirements
 
