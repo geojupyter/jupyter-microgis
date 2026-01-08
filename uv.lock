@@ -1107,7 +1107,10 @@ dependencies = [
     { name = "titiler" },
 ]
 
-[package.optional-dependencies]
+[package.dev-dependencies]
+dev = [
+    { name = "jupyterlab" },
+]
 test = [
     { name = "coverage" },
     { name = "pytest" },
@@ -1116,29 +1119,25 @@ test = [
     { name = "pytest-jupyter", extra = ["server"] },
 ]
 
-[package.dev-dependencies]
-dev = [
-    { name = "jupyterlab" },
-]
-
 [package.metadata]
 requires-dist = [
     { name = "anycorn" },
     { name = "anyio" },
-    { name = "coverage", marker = "extra == 'test'" },
     { name = "geopandas" },
     { name = "jupyter-server", specifier = ">=2.4.0,<3" },
-    { name = "pytest", marker = "extra == 'test'" },
-    { name = "pytest-asyncio", marker = "extra == 'test'" },
-    { name = "pytest-cov", marker = "extra == 'test'" },
-    { name = "pytest-jupyter", extras = ["server"], marker = "extra == 'test'", specifier = ">=0.6.0" },
     { name = "rioxarray" },
     { name = "titiler" },
 ]
-provides-extras = ["test"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "jupyterlab", specifier = ">=4.5.1" }]
+test = [
+    { name = "coverage" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "pytest-jupyter", extras = ["server"], specifier = ">=0.6.0" },
+]
 
 [[package]]
 name = "jupyterlab"
