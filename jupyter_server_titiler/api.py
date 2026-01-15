@@ -1,4 +1,3 @@
-# import rioxarray
 import uuid
 from asyncio import Event, Lock, Task, create_task
 from functools import partial
@@ -8,9 +7,6 @@ from anycorn import Config, serve
 from anyio import connect_tcp, create_task_group
 from fastapi import FastAPI
 
-# from starlette.middleware.cors import CORSMiddleware
-# from geopandas import GeoDataFrame
-# from xarray import DataArray, Dataset
 from xarray import DataArray
 from rio_tiler.io.xarray import XarrayReader
 from titiler.core.factory import TilerFactory
@@ -19,25 +15,6 @@ from titiler.core.algorithm import BaseAlgorithm
 from titiler.core.dependencies import DefaultDependency
 
 from jupyter_server_titiler.constants import ENDPOINT_BASE
-
-
-# def _setup_app() -> FastAPI:
-#     app = FastAPI()
-#
-#     # Add CORS middleware
-#     app.add_middleware(
-#         CORSMiddleware,
-#         allow_origins=["*"],  # Allows all origins (for development - be more specific in production)
-#         allow_credentials=True,
-#         allow_methods=["*"],
-#         allow_headers=["*"],
-#     )
-#
-#     return app
-#
-#
-# def _create_xarray_id_lookup(*args: list[DataArray | Dataset]):
-#     return {uuid.uuid4(): ds for ds in args}
 
 
 class TiTilerServer:
@@ -146,25 +123,18 @@ class TiTilerServer:
         self._app.include_router(tiler.router, prefix=f"/{source_id}")
 
 
-# def explore(*args: list[DataArray | Dataset | GeoDataFrame]):
-#     app = _setup_app()
-#
-#     xarray_objs = tuple(arg for arg in args if isinstance(arg, (DataArray, Dataset)))
-#     if xarray_objs:
-#         xarray_id_lookup = _create_xarray_id_lookup(xarray_objs)
-#
-#         tiler_factory = TilerFactory(
-#             path_dependency=xarray_id_lookup.get,
-#             reader=XarrayReader,
-#             reader_dependency=DefaultDependency,
-#         )
-#         app.include_router(tiler_factory.router)
-#
-#         import uvicorn
-#         uvicorn.run(app=app, host="127.0.0.1", port=8080, log_level="info")
-#         # return app, xarray_id_lookup
-#
-#     # Display a widget
-#     # TODO: What if there are multiple widgets?
-#     # TODO: Clean up when widgets clean up
-#     raise NotImplementedError("Only xarray.Dataset and xarray.DataArray are supported for now.")
+# async def explore(*args: list[DataArray | Dataset]):
+async def explore(da: DataArray):
+    """Explore xarray DataArrays and Datasets in a map widget.
+
+    This function must be called with await in a Jupyter notebook:
+        await explore(data_array)
+
+    TODO: Support any number of Xarray objects
+    """
+    titiler_server = TiTilerServer()
+    return await titiler_server.add_data_array(da, name="my_da")
+
+    # TODO: Display a widget
+    # TODO: What if there are multiple widgets?
+    # TODO: Clean up when widgets clean up
