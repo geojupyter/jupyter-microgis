@@ -8,6 +8,7 @@ from jupyter_server_titiler.constants import (
     ENDPOINT_BASE,
     SERVER_EXTENSION_NAME,
 )
+from jupyter_server_titiler.api import TiTilerServer
 
 
 class TiTilerRouteHandler(APIHandler):
@@ -24,10 +25,14 @@ class TiTilerRouteHandler(APIHandler):
             return
 
         params = {key: val[0].decode() for key, val in self.request.arguments.items()}
-        server_url = params.pop("server_url")
-        print(path)
+
+        server = TiTilerServer()
+        await server.start_tile_server()
+        get_url = f"{server._tile_server_url}/{path}"
+
         async with httpx.AsyncClient() as client:
-            r = await client.get(f"{server_url}/{path}", params=params)
+            r = await client.get(get_url, params=params)
+
             self.write(r.content)
 
 

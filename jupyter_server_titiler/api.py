@@ -1,6 +1,7 @@
 import uuid
 from asyncio import Event, Lock, Task, create_task
 from functools import partial
+from typing import Optional
 from urllib.parse import urlencode
 
 from anycorn import Config, serve
@@ -18,10 +19,20 @@ from jupyter_server_titiler.constants import ENDPOINT_BASE
 
 
 class TiTilerServer:
-    """Shamelessly stolen from jupytergis-tiler.
+    """A singleton class to manage a TiTiler FastAPI server instance.
+
+    Shamelessly stolen from jupytergis-tiler.
 
     https://github.com/geojupyter/jupytergis-tiler/blob/main/src/jupytergis/tiler/gis_document.py
     """
+
+    _instance: Optional["TiTilerServer"] = None
+
+    def __new__(cls) -> "TiTilerServer":
+        if cls._instance is None:
+            print("New TiTilerServer instance created")
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -50,7 +61,6 @@ class TiTilerServer:
         await self.start_tile_server()
 
         _params = {
-            "server_url": self._tile_server_url,
             "scale": str(scale),
             "colormap_name": colormap_name,
             "reproject": "max",
