@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 from anycorn import Config, serve
 from anyio import connect_tcp, create_task_group
 from fastapi import FastAPI
+from fastapi.routing import APIRoute
 
 from xarray import DataArray
 from rio_tiler.io.xarray import XarrayReader
@@ -52,7 +53,11 @@ class TiTilerServer:
 
     @property
     def routes(self) -> list[dict[str, Any]]:
-        return [{"path": route.path, "name": route.name} for route in self._app.routes]
+        return [
+            {"path": route.path, "name": route.name}
+            for route in self._app.router.routes
+            if isinstance(route, APIRoute)
+        ]
 
     async def start_tile_server(self):
         async with self._tile_server_lock:
