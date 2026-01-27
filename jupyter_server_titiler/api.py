@@ -93,6 +93,9 @@ class TiTilerServer:
         if algorithm is not None:
             _params["algorithm"] = "algorithm"
         source_id = str(uuid.uuid4())
+
+        self._include_tile_server_router(source_id, data_array, algorithm)
+
         url = (
             f"/{ENDPOINT_BASE}/{source_id}/tiles/WebMercatorQuad/"
             + "{z}/{x}/{y}.png?"
