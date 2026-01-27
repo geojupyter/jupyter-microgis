@@ -1,7 +1,8 @@
+import numpy as np
 import pytest
 import pytest_asyncio
-import numpy as np
 import xarray as xr
+
 from jupyter_server_titiler.api import TiTilerServer
 
 

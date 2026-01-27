@@ -8,13 +8,12 @@ from anycorn import Config, serve
 from anyio import connect_tcp, create_task_group
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
-
-from xarray import DataArray
 from rio_tiler.io.xarray import XarrayReader
-from titiler.core.factory import TilerFactory
-from titiler.core.algorithm import algorithms as default_algorithms
 from titiler.core.algorithm import BaseAlgorithm
+from titiler.core.algorithm import algorithms as default_algorithms
 from titiler.core.dependencies import DefaultDependency
+from titiler.core.factory import TilerFactory
+from xarray import DataArray
 
 from jupyter_server_titiler.constants import ENDPOINT_BASE
 

@@ -1,11 +1,10 @@
 import httpx
-
+import tornado
 from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join
-import tornado
 
-from jupyter_server_titiler.constants import ENDPOINT_BASE
 from jupyter_server_titiler.api import TiTilerServer
+from jupyter_server_titiler.constants import ENDPOINT_BASE
 
 
 class TiTilerRouteHandler(APIHandler):
