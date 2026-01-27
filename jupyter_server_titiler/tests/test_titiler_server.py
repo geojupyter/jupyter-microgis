@@ -28,10 +28,11 @@ def random_data_array():
     )
 
 
-def test_server_is_singleton():
+@pytest.mark.asyncio
+async def test_server_is_singleton():
     """Test that TiTilerServer is a singleton."""
     assert TiTilerServer() is TiTilerServer()
-    TiTilerServer.reset()
+    await TiTilerServer.reset()
 
 
 @pytest.mark.asyncio
