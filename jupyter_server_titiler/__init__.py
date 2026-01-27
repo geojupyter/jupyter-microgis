@@ -1,7 +1,12 @@
+from jupyter_server_titiler.api import explore
 from jupyter_server_titiler.constants import (
     LAB_EXTENSION_NAME,
     SERVER_EXTENSION_NAME,
 )
+from jupyter_server_titiler.routes import setup_routes
+from jupyter_server_titiler.server import TiTilerServer
+
+__all__ = ["explore", "TiTilerServer"]
 
 try:
     from jupyter_server_titiler._version import __version__
@@ -13,8 +18,6 @@ except ImportError:
 
     warnings.warn(f"Importing '{SERVER_EXTENSION_NAME}' outside a proper installation.")
     __version__ = "dev"
-
-from jupyter_server_titiler.routes import setup_routes
 
 
 def _jupyter_labextension_paths():
