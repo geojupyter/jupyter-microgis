@@ -35,6 +35,9 @@ class TiTilerServer:
         return cls._instance
 
     def __init__(self, *args, **kwargs) -> None:
+        if hasattr(self, "_tile_server_task"):
+            return
+
         super().__init__(*args, **kwargs)
         self._tile_server_task: Task | None = None
         self._tile_server_started = Event()
