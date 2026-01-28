@@ -4,10 +4,12 @@ from functools import partial
 from typing import Any, Self
 from urllib.parse import urlencode
 
+import httpx
 from anycorn import Config, serve
 from anyio import connect_tcp, create_task_group
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
+from jupyter_server.serverapp import list_running_servers
 from rio_tiler.io.xarray import XarrayReader
 from titiler.core.algorithm import BaseAlgorithm
 from titiler.core.algorithm import algorithms as default_algorithms
@@ -16,6 +18,7 @@ from titiler.core.factory import TilerFactory
 from xarray import DataArray
 
 from jupyter_server_titiler.constants import ENDPOINT_BASE
+from jupyter_server_titiler.kernel import get_kernel_id
 
 
 class TiTilerServer:
@@ -27,6 +30,7 @@ class TiTilerServer:
     """
 
     _instance: Self | None = None
+    _kernel_id: str
     _app: FastAPI
 
     def __new__(cls) -> Self:
@@ -43,6 +47,7 @@ class TiTilerServer:
         self._tile_server_started = Event()
         self._tile_server_shutdown = Event()
         self._tile_server_lock = Lock()
+        self._kernel_id = get_kernel_id()
 
     @classmethod
     async def reset(cls) -> None:
@@ -66,9 +71,10 @@ class TiTilerServer:
 
     async def start_tile_server(self) -> None:
         async with self._tile_server_lock:
-            if not self._tile_server_started.is_set():
-                self._tile_server_task = create_task(self._start_tile_server())
-                await self._tile_server_started.wait()
+            if self._tile_server_started.is_set():
+                return
+            self._tile_server_task = create_task(self._start_tile_server())
+            await self._tile_server_started.wait()
 
     async def add_data_array(
         self,
@@ -138,6 +144,21 @@ class TiTilerServer:
                 else:
                     self._tile_server_started.set()
                     break
+
+            await self._register_server()
+
+    async def _register_server(self) -> None:
+        async with httpx.AsyncClient() as client:
+            # FIXME: I know this is wrong. There may be multiple running servers. I'm
+            # asking for help.
+            server_info = next(list_running_servers())
+            url = f"{server_info['url']}{ENDPOINT_BASE}"
+            payload = {
+                "kernel_id": self._kernel_id,
+                "server_url": self._tile_server_url,
+            }
+            response = await client.post(url, json=payload)
+            response.raise_for_status()
 
     def _include_tile_server_router(
         self,
