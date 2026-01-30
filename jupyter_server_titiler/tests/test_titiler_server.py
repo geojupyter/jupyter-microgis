@@ -3,7 +3,7 @@ import pytest
 import pytest_asyncio
 import xarray as xr
 
-from jupyter_server_titiler.api import TiTilerServer
+from jupyter_server_titiler.titiler import TiTilerServer
 
 
 @pytest_asyncio.fixture
@@ -74,7 +74,8 @@ async def test_add_data_array_returns_valid_tile_url(titiler_server, random_data
     )
 
     assert tile_url is not None
-    assert "/titiler/" in tile_url
+    assert "/proxy/" in tile_url
+    assert f"/{titiler_server._port}/" in tile_url
     assert "/tiles/WebMercatorQuad/{z}/{x}/{y}.png" in tile_url
     assert "colormap_name=viridis" in tile_url
     assert "scale=1" in tile_url
